@@ -1,0 +1,9 @@
+name: StaffListener
+version: 2.0
+main: lubdan.stafflistener.StaffListener
+authors: [Lubdan]
+description: Logs Staff Activity in an easy to view format.
+commands:
+  StaffListener:
+    description: Allows you to generate a staff report.
+
