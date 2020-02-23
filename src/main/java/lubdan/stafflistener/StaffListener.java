@@ -10,12 +10,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.sql.*;
+import java.util.List;
 
 
 public final class StaffListener extends JavaPlugin {
     private Connection DBconnection;
     private int LogNumber;
     static String path = "/plugins/StaffListener/Staff.db";
+    private List<String> exempt;
 
     @Override
     public void onEnable() {
@@ -40,6 +42,7 @@ public final class StaffListener extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new Quit(this),this);
         this.getServer().getPluginManager().registerEvents(new BreakBlock(this),this);
         getCommand("StaffListener").setExecutor(new lubdan.stafflistener.Commands.StaffListener(this));
+        this.exempt = this.getConfig().getStringList("Exempt-Players");
 
     }
 
@@ -99,6 +102,10 @@ public final class StaffListener extends JavaPlugin {
 
     public void writeLog(Type type, String Content, String UUID, String Name, double x, double y, double z, String Time){
 
+        if(this.exempt.contains(Name)){
+            return;
+        }
+
         String sql = "INSERT INTO Staff(LogNumber,Type,Content,UUID,Name,X_coordinate,Y_coordinate,Z_Coordinate,Time) VALUES (?,?,?,?,?,?,?,?,?)";
         try{
             PreparedStatement stm = this.DBconnection.prepareStatement(sql);
@@ -114,7 +121,7 @@ public final class StaffListener extends JavaPlugin {
             stm.executeUpdate();
             this.LogNumber++;
 
-            System.out.println("Successfully wrote update to database");
+
 
         }
         catch (Exception ex){
